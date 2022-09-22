@@ -14,9 +14,14 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Map;
 
 @Controller
@@ -73,11 +78,27 @@ public class ClienteController {
     //BindingResult debe estar adyacente a la entity (ex. cliente)
     // el atributo "cliente" del metodo crear se pasa a la vista siempre y cuando el parametro se llame igual "cliente"
     @RequestMapping(value = "/form", method = RequestMethod.POST)
-    public String guardar(@Valid Cliente cliente, BindingResult result, Model model, RedirectAttributes flash, SessionStatus status){
+    public String guardar(@Valid Cliente cliente, BindingResult result, Model model, @RequestParam("file") MultipartFile foto, RedirectAttributes flash, SessionStatus status){
 
         if (result.hasErrors()){
             model.addAttribute("titulo", "Formulario de Cliente");
             return "form";
+        }
+
+        //Guarda la imagen adjunta
+        if (!foto.isEmpty()){
+            Path directorioRecursos = Paths.get("src//main//resources//static//uploads");
+            String rootPath = directorioRecursos.toFile().getAbsolutePath();
+
+            try {
+                byte[] bytes = foto.getBytes();
+                Path rutaCompleta = Paths.get(rootPath + "//" + foto.getOriginalFilename());
+                Files.write(rutaCompleta, bytes);
+                flash.addFlashAttribute("info", "Ha subido correctamente '" + foto.getOriginalFilename() + "'");
+                cliente.setFoto(foto.getOriginalFilename());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         String mensajeFlash = (cliente.getId() != null) ? "Cliente editado con exito!" : "Cliente creado con éxito!";
