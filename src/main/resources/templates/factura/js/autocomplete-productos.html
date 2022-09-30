@@ -26,6 +26,12 @@
                 select: function(event,ui){
                     // $("#buscar_producto").val(ui.item.label);
 
+                    if ( itemsHelper.hasProducto(ui.item.value)){
+                        itemsHelper.incrementarCantidad(ui.item.value, ui.item.precio);
+
+                        return false;
+                    }
+
                     //Buscar el id = "plantillaItemsFactura" en el html 'autocomplete-productos.html'
                     var linea = $("#plantillaItemsFactura").html();
 
@@ -35,6 +41,7 @@
                     linea = linea.replace(/{PRECIO}/g, ui.item.precio);
 
                     $("#cargarItemProductos tbody").append(linea);
+                    itemsHelper.calcularImporte(ui.item.value, ui.item.precio, 1)
 
                     return false;
                 },
@@ -45,6 +52,26 @@
             });
         }
     );
+
+    var itemsHelper = {
+        calcularImporte: function(id, precio, cantidad){
+            $("#total_importe_" + id).html(parseInt(precio) * parseInt(cantidad));
+        },
+        hasProducto: function (id){
+            var resultado = false;
+            $('input[name="item_id[]"]').each( function (){
+                if (parseInt(id) == parseInt($(this).val())){
+                    resultado = true;
+                }
+            });
+            return resultado;
+        },
+        incrementarCantidad: function (id, precio){
+            var cantidad = $("#cantidad_" + id).val() ? parseInt($("#cantidad_" + id).val()) : 0;
+            $("#cantidad_" + id).val(++cantidad);
+            this.calcularImporte(id, precio, cantidad);
+        }
+    }
 </script>
 </body>
 </html>
