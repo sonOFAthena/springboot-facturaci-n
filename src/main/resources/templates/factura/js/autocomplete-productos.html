@@ -24,7 +24,18 @@
                     });
                 },
                 select: function(event,ui){
-                    $("#buscar_producto").val(ui.item.label);
+                    // $("#buscar_producto").val(ui.item.label);
+
+                    //Buscar el id = "plantillaItemsFactura" en el html 'autocomplete-productos.html'
+                    var linea = $("#plantillaItemsFactura").html();
+
+                    //Reemplazamos los valores dentro del html
+                    linea = linea.replace(/{ID}/g, ui.item.value);
+                    linea = linea.replace(/{NOMBRE}/g, ui.item.label);
+                    linea = linea.replace(/{PRECIO}/g, ui.item.precio);
+
+                    $("#cargarItemProductos tbody").append(linea);
+
                     return false;
                 },
                 focus: function(event, ui){
