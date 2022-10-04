@@ -3,6 +3,8 @@ package com.artion.springboot.app.models.entity;
 import org.hibernate.cache.spi.support.AbstractReadWriteAccess;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,6 +18,7 @@ public class Factura implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotEmpty
     private String descripcion;
     private String observacion;
 

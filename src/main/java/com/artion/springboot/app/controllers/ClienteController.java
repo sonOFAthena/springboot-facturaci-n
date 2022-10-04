@@ -110,7 +110,12 @@ public class ClienteController {
     //BindingResult debe estar adyacente a la entity (ex. cliente)
     // el atributo "cliente" del metodo crear se pasa a la vista siempre y cuando el parametro se llame igual "cliente"
     @RequestMapping(value = "/form", method = RequestMethod.POST)
-    public String guardar(@Valid Cliente cliente, BindingResult result, Model model, @RequestParam("file") MultipartFile foto, RedirectAttributes flash, SessionStatus status){
+    public String guardar(@Valid Cliente cliente,
+                          BindingResult result,
+                          Model model,
+                          @RequestParam("file") MultipartFile foto,
+                          RedirectAttributes flash,
+                          SessionStatus status){
 
         if (result.hasErrors()){
             model.addAttribute("titulo", "Formulario de Cliente");
