@@ -1,0 +1,34 @@
+@startuml
+
+class Cliente {
+    - Integer id
+    - String nombre
+    - String apellido
+    - String email
+    - Date createAt
+    - List<Factura> facturas
+}
+
+class Factura {
+    - String folio
+    - String descripcion
+    - String observacion
+    - Date fecha
+    + Long cacularTotal()
+}
+
+class LineaFactura {
+    - Integer cantidad
+    + Long calcularImporte()
+}
+
+class Producto {
+    - String nombre
+    - Long precio
+    + String getName()
+}
+
+Cliente o-- Factura : aggregation
+Factura *-- LineaFactura
+LineaFactura --> Producto
+@enduml
